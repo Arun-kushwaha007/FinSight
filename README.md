@@ -1,2 +1,4 @@
 # FinSight
-B2C FinTech Application
+
+Monorepo for FinSight (web, api, landing, packages, infra).
+See docs/ for architecture and setup guides.
