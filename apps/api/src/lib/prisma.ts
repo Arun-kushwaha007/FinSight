@@ -1,11 +1,12 @@
-// apps/api/src/lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
 
-declare global {
-  // prevent multiple instances in dev
-  var _prisma?: PrismaClient;
-}
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-export const prisma = global._prisma ?? new PrismaClient();
+export const prisma =
+  globalForPrisma.prisma ?? new PrismaClient();
 
-if (process.env.NODE_ENV === "development") global._prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export default prisma;
