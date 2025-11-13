@@ -8,26 +8,48 @@ import { useRouter } from "next/navigation";
 export default function InsightsPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [insights, setInsights] = useState<any>(null);
-  const [loadingI, setLoadingI] = useState(false);
+  const [insight, setInsight] = useState<any>(null);
+  const [loadingInsight, setLoadingInsight] = useState(true);
+  const [regenerating, setRegenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && !user) router.push("/login");
+    if (!loading && !user) {
+      router.push("/login");
+    }
   }, [loading, user, router]);
 
-  const generate = async () => {
+  useEffect(() => {
+    if (user) {
+      fetchLatestInsight();
+    }
+  }, [user]);
+
+  const fetchLatestInsight = async () => {
+    setLoadingInsight(true);
     setError(null);
-    setInsights(null);
-    setLoadingI(true);
     try {
-      const res = await api.post("/insights", {});
-      setInsights(res.data);
+      const res = await api.get("/insights/latest");
+      setInsight(res.data);
     } catch (err: any) {
       console.error(err);
-      setError(err?.response?.data?.error || err.message || "Failed to generate insights");
+      setError(err?.response?.data?.error || err.message || "Failed to fetch latest insight");
     } finally {
-      setLoadingI(false);
+      setLoadingInsight(false);
+    }
+  };
+
+  const regenerate = async () => {
+    setRegenerating(true);
+    setError(null);
+    try {
+      const res = await api.post("/insights/regenerate");
+      setInsight(res.data);
+    } catch (err: any) {
+      console.error(err);
+      setError(err?.response?.data?.error || err.message || "AI service failed; try again later.");
+    } finally {
+      setRegenerating(false);
     }
   };
 
@@ -38,40 +60,51 @@ export default function InsightsPage() {
     <main className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold">FinSight Insights</h1>
-        <div className="text-sm text-gray-500">Model: {insights?.model_used ?? "Not generated"}</div>
+        <div className="text-sm text-gray-500">
+          Model: {insight?.modelUsed ?? "Not available"} | Tokens: {insight?.costMetadata?.tokens ?? "N/A"}
+        </div>
       </div>
+
+      {insight?.isStale && (
+        <div className="p-4 mb-4 text-red-700 bg-red-100 border-l-4 border-red-500">
+          <p className="font-bold">Outdated – Regenerate</p>
+          <p>Your transaction data has changed since this insight was generated.</p>
+        </div>
+      )}
 
       <div className="space-x-3">
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-60"
-          disabled={loadingI}
-          onClick={generate}
+          disabled={regenerating}
+          onClick={regenerate}
         >
-          {loadingI ? "Generating..." : "Generate Insights"}
+          {regenerating ? "Regenerating..." : "Regenerate Insight"}
         </button>
       </div>
 
       {error && <div className="mt-4 text-red-600">{error}</div>}
 
-      {insights && (
+      {loadingInsight && <p>Loading insight...</p>}
+
+      {insight && !loadingInsight && (
         <section className="mt-6 space-y-6">
           <div className="bg-white p-4 rounded shadow">
             <h2 className="font-semibold">Summary</h2>
-            <p className="mt-2 whitespace-pre-wrap">{typeof insights.summary === "string" ? insights.summary : JSON.stringify(insights.summary, null, 2)}</p>
+            <p className="mt-2 whitespace-pre-wrap">{typeof insight.summary === "string" ? insight.summary : JSON.stringify(insight.summary, null, 2)}</p>
           </div>
 
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold">Recommendations</h3>
             <ul className="list-disc pl-6 mt-2">
-              {(insights.recommendations || []).map((r: string, idx: number) => <li key={idx}>{r}</li>)}
+              {(insight.recommendations || []).map((r: string, idx: number) => <li key={idx}>{r}</li>)}
             </ul>
           </div>
 
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold">Anomalies</h3>
-            {insights.anomalies?.length ? (
+            {insight.anomalies?.length ? (
               <ul className="list-disc pl-6 mt-2">
-                {insights.anomalies.map((a: any, i: number) => (
+                {insight.anomalies.map((a: any, i: number) => (
                   <li key={i}>
                     <div><strong>Reason:</strong> {a.explanation || a.reason || JSON.stringify(a)}</div>
                     <div className="text-sm text-gray-600">{a.transaction ? `${a.transaction.date} • ${a.transaction.description} • ${a.transaction.amount}` : ""}</div>
@@ -81,11 +114,6 @@ export default function InsightsPage() {
             ) : (
               <p className="mt-2 text-gray-600">No anomalies detected.</p>
             )}
-          </div>
-
-          <div className="bg-gray-50 p-4 rounded">
-            <h4 className="font-semibold">Raw model output</h4>
-            <pre className="text-xs mt-2 p-2 bg-black text-white rounded max-h-64 overflow-auto">{JSON.stringify(insights.raw, null, 2)}</pre>
           </div>
         </section>
       )}

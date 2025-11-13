@@ -43,3 +43,5 @@ coverage
 /apps/ai/.env
 
 
+.env.example
+.env.test

@@ -43,3 +43,30 @@ model Budget {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model InsightHistory {
+  id            String    @id @default(cuid())
+  userId        String
+  createdAt     DateTime  @default(now())
+  inputsHash    String
+  summary       Json
+  anomalies     Json?
+  recommendations Json?
+  modelUsed     String
+  costMetadata  Json?     // tokens, latency, price
+  isStale       Boolean   @default(false)
+  transactionsCount Int
+  // optional: link to transaction set snapshot id if implemented
+  @@index([userId, inputsHash])
+}
+
+model AIRequestLog {
+  id            String   @id @default(cuid())
+  userId        String?
+  createdAt     DateTime @default(now())
+  requestPayload Json
+  responsePayload Json?
+  success       Boolean  @default(false)
+  retryCount    Int      @default(0)
+  errorDetails  Json?
+}

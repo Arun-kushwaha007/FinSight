@@ -47,6 +47,10 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
           .filter((tx) => !isNaN(tx.amount));
 
         await prisma.transaction.createMany({ data: parsed });
+        
+        // Mark insight as stale
+        const { markLatestInsightAsStaleIfTransactionsChanged } = await import("../services/insightsService");
+        await markLatestInsightAsStaleIfTransactionsChanged(userId);
 
         fs.unlinkSync(filePath); // cleanup
         res.json({ count: parsed.length, success: true });
