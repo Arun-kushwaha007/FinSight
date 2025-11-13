@@ -42,6 +42,15 @@ export default function DashboardPage() {
         <h1 className="text-xl font-semibold">
           Hello, {user.name || user.email}
         </h1>
+        <div className="flex justify-end mt-4">
+          <a
+            href="/insights"
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+          >
+            View AI Insights
+          </a>
+        </div>
+        
         <div className="flex gap-4">
           <a href="/upload" className="text-blue-600 hover:underline">
             Upload

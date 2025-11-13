@@ -37,5 +37,9 @@ coverage
 /packages/auth/node_modules
 /packages/auth/dist
 /packages/db/node_modules
+/apps/ai/.venv
+/apps/ai/__pycache__
+/apps/ai/*.pyc
+/apps/ai/.env
 
 

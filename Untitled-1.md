@@ -2,23 +2,26 @@
 └── 📁FinSight
         └── 📁branches
         └── 📁hooks
-            ├── applypatch-msg.sample
-            ├── commit-msg.sample
-            ├── fsmonitor-watchman.sample
-            ├── post-update.sample
-            ├── pre-applypatch.sample
-            ├── pre-commit.sample
-            ├── pre-merge-commit.sample
-            ├── pre-push.sample
-            ├── pre-rebase.sample
-            ├── pre-receive.sample
-            ├── prepare-commit-msg.sample
-            ├── push-to-checkout.sample
-            ├── sendemail-validate.sample
-            ├── update.sample
+            
         └── 📁info
             ├── exclude
-        └── 📁log
+        └── 📁logs
+            └── 📁refs
+                └── 📁heads
+                    ├── main
+                └── 📁remotes
+                    └── 📁origin
+                        ├── HEAD
+                        ├── main
+            ├── HEAD
+        └── 📁objects
+        └── 📁refs
+            └── 📁heads
+                ├── main
+            └── 📁remotes
+                └── 📁origin
+                    ├── HEAD
+                    ├── main
             └── 📁tags
         ├── COMMIT_EDITMSG
         ├── config
@@ -28,6 +31,43 @@
         ├── index
         ├── packed-refs
     └── 📁apps
+        └── 📁ai
+            └── 📁__pycache__
+                ├── main.cpython-312.pyc
+            └── 📁.venv
+                └── 📁bin
+                    ├── activate
+                    ├── activate.csh
+                    ├── activate.fish
+                    ├── Activate.ps1
+                    ├── distro
+                    ├── dotenv
+                    ├── fastapi
+                    ├── httpx
+                    ├── normalizer
+                    ├── openai
+                    ├── pip
+                    ├── pip3
+                    ├── pip3.12
+                    ├── python
+                    ├── python3
+                    ├── python3.12
+                    ├── tqdm
+                    ├── uvicorn
+                └── 📁include
+                    └── 📁python3.12
+                └── 📁lib
+                    └── 
+                └── 📁lib64
+                    └── 📁python3.12
+                        └── 📁site-packages
+                            └── 📁__pycache__
+                                ├── typing_extensions.cpython-312.pyc
+                            
+                            ├── typing_extensions.py
+                ├── pyvenv.cfg
+            ├── .env
+            ├── main.py
         └── 📁api
             └── 📁src
                 └── 📁config
@@ -40,8 +80,11 @@
                 └── 📁models
                 └── 📁routes
                     ├── auth.ts
+                    ├── insights.ts
+                    ├── transactions.ts
                 └── 📁services
                 ├── index.ts
+            └── 📁uploads
             ├── .env
             ├── .env.local
             ├── .env.production
@@ -51,14 +94,13 @@
         └── 📁mobile
         └── 📁web
                 └── 📁dev
-                    └── 📁build
-                        
+                        └── 📁chunks
+                            
                     └── 📁types
                         ├── routes.d.ts
                         ├── validator.ts
                     ├── build-manifest.json
                     ├── fallback-build-manifest.json
-                    ├── lock
                     ├── package.json
                     ├── prerender-manifest.json
                     ├── routes-manifest.json
@@ -69,9 +111,13 @@
             └── 📁app
                 └── 📁dashboard
                     ├── page.tsx
+                └── 📁insights
+                    ├── page.tsx
                 └── 📁login
                     ├── page.tsx
                 └── 📁signup
+                    ├── page.tsx
+                └── 📁upload
                     ├── page.tsx
                 ├── favicon.ico
                 ├── globals.css
@@ -174,5 +220,7 @@
     ├── LICENSE
     ├── package-lock.json
     ├── package.json
-    └── README.md
+    ├── README.md
+    ├── short-circuit
+    └── update
 ```

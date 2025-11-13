@@ -1,24 +1,23 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
   output   = "../../apps/api/node_modules/.prisma/client"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model User {
-  id          String        @id @default(cuid())
-  email       String        @unique
-  name        String?
-  password    String        
-  currency    String?       @default("INR")
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  password     String
+  currency     String?       @default("INR")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  budgets      Budget[]
   transactions Transaction[]
-  budgets     Budget[]
 }
 
 model Transaction {
@@ -30,10 +29,9 @@ model Transaction {
   description String?
   merchant    String?
   category    String?
-  type        String  
+  type        String
   createdAt   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Budget {
@@ -43,6 +41,5 @@ model Budget {
   amount    Float
   month     DateTime
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
